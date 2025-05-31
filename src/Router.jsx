@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { CartProvider } from "./context/CartContext";
@@ -32,7 +32,7 @@ const Router = () => {
     <UserProvider>
       <FavoritesProvider>
         <CartProvider>
-          <BrowserRouter>
+          <HashRouter>
             <Routes>
               {/* Routes publiques */}
               <Route path="/login" element={<Login />} />
@@ -46,7 +46,7 @@ const Router = () => {
                 />
               ))}
             </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </CartProvider>
       </FavoritesProvider>
     </UserProvider>
