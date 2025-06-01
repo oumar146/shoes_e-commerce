@@ -11,7 +11,7 @@ import Favorites from "./pages/Favorites";
 import Cart from "./pages/Cart";
 import ArticlesByGender from "./pages/ArticlesByGender";
 import PaymentPage from "./pages/PaymentPage";
-
+import ArticlesByCategory from "./pages/ArticlesByCategory";
 // Définir les routes
 const routes = [
   { path: "/", element: <Home /> },
@@ -22,6 +22,8 @@ const routes = [
   { path: "/favorites", element: <Favorites /> },
   { path: "/cart", element: <Cart /> },
   { path: "/product/gender/:gender", element: <ArticlesByGender /> },
+    { path: "/product/category/:category", element: <ArticlesByCategory /> },
+
       { path: "/product/checkout", element: <PaymentPage /> },
     { path: "/product/checkout/:id", element: <PaymentPage /> },
 

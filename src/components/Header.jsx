@@ -56,14 +56,14 @@ const MobileMenu = ({ children }) => {
 
       <div className={`side-menu ${showMenu ? "open" : ""}`}>
         <button className="close-button" onClick={() => setShowMenu(false)}>X</button>
-       {children ? (<div className="mobile-children">
+        {children ? (<div className="mobile-children">
           {children}
-        </div>):(
-        <ul>
-          {categories.map((category, index) => (
-            <li key={index}>{category.name}</li>
-          ))}
-        </ul>)}
+        </div>) : (
+          <ul>
+            {categories.map((category, index) => (
+              <li key={index}>{category.name}</li>
+            ))}
+          </ul>)}
       </div>
 
       {showMenu && <div className="overlay" onClick={() => setShowMenu(false)} />}
@@ -135,7 +135,16 @@ const Header = ({ children }) => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-
+          <select
+            className="gender-dropdown"
+            value={selectedGender}
+            onChange={handleGenderChange}
+          >
+            <option value="">Choisir un genre</option>
+            {genders.map((gender, index) => (
+              <option key={index} value={gender}>{gender}</option>
+            ))}
+          </select>
           <IconButton onClick={() => setShowSearch(false)} className="header-icon">
             <CloseIcon />
           </IconButton>
@@ -159,19 +168,6 @@ const Header = ({ children }) => {
           {/* <MobileMenu>{children}</MobileMenu> */}
           <NavLink className="nav-link" to="/home"><h1 className="logo">KICKS</h1></NavLink>
           <ul className="nav-items">
-            <li>
-              
-          <select
-            className="gender-dropdown"
-            value={selectedGender}
-            onChange={handleGenderChange}
-          >
-            <option value="">Choisir un genre</option>
-            {genders.map((gender, index) => (
-              <option key={index} value={gender}>{gender}</option>
-            ))}
-          </select>
-            </li>
             <li>
               <IconButton onClick={() => setShowSearch(true)} className="header-icon">
                 <SearchIcon />

@@ -11,6 +11,7 @@ const Filters = ({
   uniqueSizes,
 }) => {
   const uniqueCategories = [...new Set(products.map((p) => p.category_name))].filter(Boolean);
+  const uniqueGenders = [...new Set(products.map((p) => p.gender_name))].filter(Boolean); 
 
   const handleCheckboxChange = (filterType, value) => {
     setFilters((prev) => {
@@ -36,6 +37,28 @@ const Filters = ({
 
   return (
     <aside className="filters">
+      {/* Genre */}
+      <div className="filter-section">
+        <div className="filter-title" onClick={() => toggleSection("gender")}>
+          <span>Genre</span>
+          {openSections.gender ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+        </div>
+        {openSections.gender && (
+          <div className="filter-options">
+            {uniqueGenders.map((gender) => (
+              <label key={gender}>
+                <input
+                  type="checkbox"
+                  onChange={() => handleCheckboxChange("gender", gender)}
+                  checked={filters.gender.includes(gender)}
+                />
+                {gender}
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Catégories */}
       <div className="filter-section">
         <div className="filter-title" onClick={() => toggleSection("category")}>

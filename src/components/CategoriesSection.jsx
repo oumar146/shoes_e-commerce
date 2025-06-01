@@ -4,6 +4,7 @@ import config from "../config";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import imgTemplate from "../sneaker_template.jpg";
 import "../styles/categorySection.css";
+import { NavLink } from "react-router-dom";
 
 const CategorySection = ({ products }) => {
     const [categories, setCategories] = useState([]);
@@ -38,7 +39,8 @@ const CategorySection = ({ products }) => {
                     <h2 className="section-title">Explorer les catégories</h2>
                     <div className="category-grid">
                         {categories.map((category) => (
-                            <div className="category-card" key={category.id}>
+                            <NavLink to={`/product/category/${category.name}`} className="category-card" key={category.id}>
+
                                 <img
                                     src={getRandomProductImage(category.name)}
                                     alt={category.name}
@@ -48,7 +50,8 @@ const CategorySection = ({ products }) => {
                                     <span className="category-name">{category.name}</span>
                                     <ArrowOutwardIcon className="category-icon" />
                                 </div>
-                            </div>
+                            </NavLink>
+
                         ))}
                     </div>
                 </section>)}

@@ -115,13 +115,13 @@ const ProductDetail = () => {
         {selectedArticle && (
           <div className="product-content">
             <div className="image-grid">
-              {[1, 2, 3, 4].map((_, index) => (
+              {/* {[1, 2, 3, 4].map((_, index) => ( */}
                 <img
-                  key={index}
+                  // key={index}
                   src={selectedArticle.image_url}
-                  alt={`${selectedArticle.product_name} ${index + 1}`}
+                  alt={selectedArticle.product_name}
                 />
-              ))}
+              {/* ))} */}
             </div>
 
             <div className="product-infos">

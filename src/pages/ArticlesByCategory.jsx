@@ -8,22 +8,21 @@ import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import "../styles/articlesByGender.css";
 
-const ArticlesByGender = () => {
-  const { gender } = useParams();
+const ArticlesByCategory = () => {
+  const { category } = useParams();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [uniqueSizes, setUniqueSizes] = useState([]);
 
   const [filters, setFilters] = useState({
-    category: [],
+    gender: [],
     price: [0, 500],
     size: [],
-    gender: gender ? [gender] : []
-
+    category: category ? [category] : [], // initialisation une seule fois ici
   });
 
   const [openSections, setOpenSections] = useState({
-    category: true,
+    gender: true,
     price: true,
     size: true,
   });
@@ -32,16 +31,20 @@ const ArticlesByGender = () => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
+  // Chargement des produits et tailles uniques
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${config.apiUrl}/product/stock`);
-        setProducts(response.data.products || []);
+        const fetchedProducts = response.data.products || [];
+        setProducts(fetchedProducts);
 
-        const sizes = (response.data.products || [])
-          .flatMap((product) =>
-            product.stock?.map((s) => s.size).filter(Boolean) || []
-          );
+        // Récupérer les tailles uniques
+        const sizes = fetchedProducts.flatMap((product) =>
+          product.stock?.map((s) => s.size).filter(Boolean) || []
+        );
         const unique = [...new Set(sizes)].sort((a, b) => parseFloat(a) - parseFloat(b));
         setUniqueSizes(unique);
       } catch (error) {
@@ -52,39 +55,39 @@ const ArticlesByGender = () => {
     fetchProducts();
   }, []);
 
+  // Mise à jour des produits filtrés quand produits ou filtres changent
   useEffect(() => {
-    if (products.length && gender) {
-      const filtered = products.filter((product) => {
-        const hasValidData =
-          product.product_name &&
-          product.category_name &&
-          product.gender_name;
-
-        if (!hasValidData) return false;
-
-        const matchGender = filters.gender.length
-          ? filters.gender.includes(product.gender_name)
-          : true;
-
-        const matchCategory = filters.category.length
-          ? filters.category.includes(product.category_name)
-          : true;
-        const matchPrice =
-          parseFloat(product.price) >= filters.price[0] &&
-          parseFloat(product.price) <= filters.price[1];
-        const matchSize = filters.size.length
-          ? product.stock?.some((stockItem) =>
-            filters.size.includes(stockItem.size)
-          )
-          : true;
-
-        return matchGender && matchCategory && matchPrice && matchSize;
-      });
-      setFilteredProducts(filtered);
-    } else {
+    if (products.length === 0) {
       setFilteredProducts([]);
+      return;
     }
-  }, [products, gender, filters]);
+
+    const filtered = products.filter((product) => {
+      // Filtre catégorie : si aucune sélection, tout passe, sinon vérifie inclusion
+      const matchCategory = filters.category.length === 0
+        ? true
+        : filters.category.includes(product.category_name);
+
+      // Filtre genre
+      const matchGender =
+        filters.gender.length === 0 || filters.gender.includes(product.gender_name);
+
+      // Filtre prix
+      const matchPrice =
+        parseFloat(product.price) >= filters.price[0] &&
+        parseFloat(product.price) <= filters.price[1];
+
+      // Filtre taille
+      const matchSize =
+        filters.size.length === 0 ||
+        (product.stock &&
+          product.stock.some((item) => filters.size.includes(item.size)));
+
+      return matchCategory && matchGender && matchPrice && matchSize;
+    });
+
+    setFilteredProducts(filtered);
+  }, [products, filters]);
 
   return (
     <div className="articles-by-gender">
@@ -99,7 +102,6 @@ const ArticlesByGender = () => {
         />
       </Header>
 
-
       <div className="content">
         <Filters
           products={products}
@@ -109,25 +111,28 @@ const ArticlesByGender = () => {
           toggleSection={toggleSection}
           uniqueSizes={uniqueSizes}
         />
-        <main className="products-list">
 
+        <main className="products-list">
           <ArticleSection
             products={filteredProducts}
             maxItems={100000}
             showIcon={false}
             iconColor="#4A69E2"
             textColor="#fff"
-            title={`Articles ${gender}`}
+            title={filters.category.length === 1 ? filters.category[0] : "Tous les articles"}
             showButton={false}
           />
           {filteredProducts.length === 0 && (
-            <p className="no-products-message">Aucun article disponible pour ces filtres.</p>
+            <p className="no-products-message">
+              Aucun article disponible pour ces filtres.
+            </p>
           )}
         </main>
       </div>
+
       <Footer />
     </div>
   );
 };
 
-export default ArticlesByGender;
+export default ArticlesByCategory;

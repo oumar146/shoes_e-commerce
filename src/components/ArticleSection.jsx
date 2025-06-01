@@ -42,8 +42,10 @@ const ArticleSection = ({
             {latestProducts.map((product, index) => (
               <div key={index} className="product-card">
                 <div className="image-wrapper">
-                  {showIcon && <span className="top-left-badge" style={{ backgroundColor: iconColor }}>Nouveau</span>}
-                  <img src={product.image_url || imgTemplate} alt={product.product_name} />
+                  <NavLink to={`/product/detail/${product.product_id}`}>
+                    {showIcon && <span className="top-left-badge" style={{ backgroundColor: iconColor }}>Nouveau</span>}
+                    <img src={product.image_url || imgTemplate} alt={product.product_name} />
+                  </NavLink>
                 </div>
                 <h3>
                   {product.product_name}<br />
